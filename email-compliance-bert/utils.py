@@ -96,11 +96,13 @@ class BinaryProcessor(DataProcessor):
 
     def get_train_examples(self, data_dir):
         """See base class."""
+        print("train_examples")
         return self._create_examples(
             self._read_tsv(os.path.join(data_dir, "train.tsv")), "train")
 
     def get_dev_examples(self, data_dir):
         """See base class."""
+        print("dev_examples")
         return self._create_examples(
             self._read_tsv(os.path.join(data_dir, "dev.tsv")), "dev")
 
@@ -116,7 +118,8 @@ class BinaryProcessor(DataProcessor):
             text_a = line[3]
             label = line[1]
             examples.append(
-                InputExample(guid=guid, text_a=text_a, text_b=None, label=label))
+                InputExamploe(guid=guid, text_a=text_a, text_b=None, label=label))
+        print(len(examples))
         return examples
 
 

@@ -215,7 +215,7 @@ def _train(args):
     logger.info("  Total train batch size  = %d", args['train_batch_size'])
     logger.info("  Gradient Accumulation steps = %d", args['gradient_accumulation_steps'])
     logger.info("  Total optimization steps = %d", t_total)
-
+    print("args ", args)
     global_step = 0
     tr_loss, logging_loss = 0.0, 0.0
     model.zero_grad()
@@ -269,6 +269,7 @@ def _train(args):
     checkpoints = list(os.path.dirname(c) for c in sorted(glob.glob(args['output_dir'] + '/**/' + WEIGHTS_NAME, recursive=True)))
     logging.getLogger("pytorch_transformers.modeling_utils").setLevel(logging.WARN)  # Reduce logging
     logger.info("Evaluate the following checkpoints: %s", checkpoints)
+    print("Evaluate the following checkpoints: ", checkpoints)
     best_result = None
     best_checkpoint = None
     results=[]
