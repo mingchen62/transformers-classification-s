@@ -1,1 +1,1 @@
-# transformers-classification-s
+# transformers-classification-sm
