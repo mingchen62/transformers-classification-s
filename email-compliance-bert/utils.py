@@ -118,7 +118,7 @@ class BinaryProcessor(DataProcessor):
             text_a = line[3]
             label = line[1]
             examples.append(
-                InputExamploe(guid=guid, text_a=text_a, text_b=None, label=label))
+                InputExample(guid=guid, text_a=text_a, text_b=None, label=label))
         print(len(examples))
         return examples
 

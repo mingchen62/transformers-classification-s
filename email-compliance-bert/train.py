@@ -284,6 +284,7 @@ def _train(args):
             best_result = result
             best_checkpoint= checkpoint
             logger.info("best result, Saving model checkpoint to %s", best_checkpoint)
+            print('best checkpoint ', best_checkpoint, ' eval result ', result)
             
         result = dict((k + '_{}'.format(global_step), v) for k, v in result.items())
         results.append(result) 
