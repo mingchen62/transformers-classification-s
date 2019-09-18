@@ -1,0 +1,74 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  ModelName:
+    Description: Model name
+    Type: String
+    Default: sagemaker-pytorch-2019-09-17-01-54-42-511
+  ModelDataUrl:
+    Description: Location of model artefact
+    Type: String
+    Default: s3://sagemaker-us-east-1-665028136136/sagemaker-pytorch-2019-09-17-01-28-30-327/output/model.tar.gz
+  TrainingImage:
+    Description: The container used to train the model (customer image)
+    Type: String
+    Default: 665028136136.dkr.ecr.us-east-1.amazonaws.com/sagemaker-pytorch-email-compliance
+  InstanceType:
+    Description: Instance type
+    Type: String
+    Default: ml.m5.xlarge
+  InstanceCount:
+    Description: Instance count
+    Type: String
+    Default: 2
+
+Resources:
+  SageMakerIamRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: Allow
+            Principal:
+              Service: sagemaker.amazonaws.com
+            Action: sts:AssumeRole
+      Path: "/"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/AmazonSageMakerFullAccess"
+  SMModel:
+    Type: "AWS::SageMaker::Model"
+    Properties: 
+      Containers: 
+        - 
+          Image: !Ref TrainingImage
+          ModelDataUrl: !Ref ModelDataUrl
+      ExecutionRoleArn: !GetAtt SageMakerIamRole.Arn
+      ModelName: !Ref ModelName
+
+  SMEndpoint:
+    Type: "AWS::SageMaker::Endpoint"
+    Properties: 
+      EndpointConfigName: !GetAtt SMEndpointConfig.EndpointConfigName
+      #Using a custom name will prevent updates with change sets
+      #EndpointName: !Ref EndpointName
+
+  SMEndpointConfig:
+    Type: "AWS::SageMaker::EndpointConfig"
+    Properties:
+      ProductionVariants: 
+        -
+          ModelName: !GetAtt SMModel.ModelName
+          VariantName: 'AllTraffic'
+          InitialInstanceCount: !Ref InstanceCount
+          InstanceType: !Ref InstanceType
+          InitialVariantWeight: 1.0
+      #Using a custom name will prevent updates with change sets
+      #EndpointConfigName: !Ref EndpointConfigName
+
+Outputs:
+  EndpointId:
+    Value: !Ref SMEndpoint
+  EndpointName:
+    Value: !GetAtt SMEndpoint.EndpointName
