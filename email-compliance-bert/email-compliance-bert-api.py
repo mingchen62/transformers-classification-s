@@ -36,11 +36,14 @@ print(parser.parse_args())
 model = model_fn(args['model_dir'])
 print(" model loaded")
 
-
-
 @app.route('/predict', methods=['POST'])
 def translate():
     if request.method == 'POST':
+        headers = request.headers
+        auth = headers.get("X-Api-Key")
+        if auth != '80DuE6p3EY8pqZNQrxVQx3l9NlPryGhp12aNX7oA':
+            return jsonify({"message": "ERROR: Unauthorized"}), 401
+
         # user inputs
         input_data = request.json
         print(input_data)
