@@ -13,6 +13,7 @@ import sys
 import time
 import random
 import json
+import argparse
 
 from train import _train
 from inference import model_fn, predict_fn
@@ -63,16 +64,16 @@ if __name__ == '__main__':
     # instantiated by the SageMaker containers framework.
     # https://github.com/aws/sagemaker-containers#how-a-script-is-executed-inside-the-container
     
-    parser.add_argument('--hosts', type=str, default=ast.literal_eval(os.environ['SM_HOSTS']))
-    parser.add_argument('--current-host', type=str, default=os.environ['SM_CURRENT_HOST'])
-    parser.add_argument('--model-dir', type=str, default=os.environ['SM_MODEL_DIR'])
-    parser.add_argument('--data-dir', type=str, default=os.environ['SM_CHANNEL_TRAINING'])
-    parser.add_argument('--output-dir', type=str, default='./outputs')
-    parser.add_argument('--num-gpus', type=int, default=os.environ['SM_NUM_GPUS'])
+    # parser.add_argument('--hosts', type=str, default=ast.literal_eval(os.environ['SM_HOSTS']))
+    # parser.add_argument('--current-host', type=str, default=os.environ['SM_CURRENT_HOST'])
+    # parser.add_argument('--model-dir', type=str, default=os.environ['SM_MODEL_DIR'])
+    # parser.add_argument('--data-dir', type=str, default=os.environ['SM_CHANNEL_TRAINING'])
+    # parser.add_argument('--output-dir', type=str, default='./outputs')
+    # parser.add_argument('--num-gpus', type=int, default=os.environ['SM_NUM_GPUS'])
 
-#    parser.add_argument('--model-dir', type=str, default='/home/ec2-user/SageMaker/transformers-classification/models')
-#    parser.add_argument('--data-dir', type=str, default='/home/ec2-user/SageMaker/transformers-classification/data')
-#    parser.add_argument('--output-dir', type=str, default='/home/ec2-user/SageMaker/transformers-classification/outputs')
+    parser.add_argument('--model-dir', type=str, default='/home/mc00/transformers-classification-sm/model')
+    parser.add_argument('--data-dir', type=str, default='/home/mc00/transformers-classification-sm/data')
+    parser.add_argument('--output-dir', type=str, default='/home/mc00/transformers-classification-sm/outputs')
     
     args= vars(parser.parse_args())
     print(parser.parse_args())
@@ -80,8 +81,11 @@ if __name__ == '__main__':
     if do_train:
         _train(args)
     else:
-        test_string= "I hope this email finds you well"
+        with open("input.txt") as f:
+            test_string = f.read().strip()
         print("input:", test_string)
         input_data={"txt":test_string}
         model = model_fn(args['model_dir'])
+        start_t =time.time()
         print(predict_fn(input_data, model))
+        print("time used in inference ", time.time()-start_t)
