@@ -15,7 +15,7 @@
 # https://docs.docker.com/compose/gettingstarted/#step-2-create-a-dockerfile
 # https://github.com/awslabs/amazon-sagemaker-examples/master/advanced_functionality/pytorch_extending_our_containers/pytorch_extending_our_containers.ipynb
 # SageMaker PyTorch image
-FROM 520713654638.dkr.ecr.us-east-1.amazonaws.com/sagemaker-pytorch:1.1.0-cpu-py3
+FROM 520713654638.dkr.ecr.us-east-1.amazonaws.com/sagemaker-pytorch:1.1.0-gpu-py3
 
 ENV PATH="/opt/ml/code:${PATH}"
 
