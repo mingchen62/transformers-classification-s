@@ -109,6 +109,10 @@ def predict_fn(input_data, model):
     all_segment_ids = torch.tensor([f.segment_ids ], dtype=torch.long)
     all_label_ids = torch.tensor([f.label_id ], dtype=torch.long)
 
+    all_input_ids = all_input_ids.to(device)
+    all_input_mask = all_input_mask.to(device)
+    all_segment_ids = all_segment_ids.to(device)
+    all_label_ids = all_label_ids.to(device)
      
     model.eval()
     with torch.no_grad():
